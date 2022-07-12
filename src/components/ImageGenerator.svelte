@@ -24,6 +24,33 @@
 
 			earthURL = source;
 
+			setTimeout(() => {
+				let canvas = document.createElement('canvas');
+				let canvas2 = document.createElement('canvas');
+
+				canvas.id = "earthImage";
+				canvas.width = 2048;
+				canvas.height = 2048;
+	
+				canvas2.id = "userImage";
+				canvas2.width = 2048;
+				canvas2.height = 2048;			
+
+				const body = document.getElementsByTagName("body")[0];
+				body.appendChild(canvas);
+				body.appendChild(canvas2);
+
+				let context = canvas.getContext("2d");
+				let context2 = canvas2.getContext("2d");
+
+				let earthImage = document.getElementById("earth-image");
+				context.drawImage(earthImage, 0, 0);
+
+				let userImage = document.getElementById("user-image");
+				context2.drawImage(userImage, 0, 0);
+
+			}, 5000);
+
 		} catch (error) {
 			console.error(error);
 		}
@@ -57,3 +84,22 @@
 
 <UserImageForm {submitForm} />
 <ImagePreview {earthURL} {userImgSrc} />
+
+
+<style>
+	#earthImage {
+		width: 500px;
+		height: 500px;
+	}
+
+	#userImage {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 500px;
+		height: 500px;
+		mix-blend-mode: overlay;
+		object-fit: cover;
+		opacity: 1;
+	}
+</style>
