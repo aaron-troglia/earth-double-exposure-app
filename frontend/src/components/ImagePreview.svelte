@@ -1,6 +1,5 @@
 <script>
-    export let earthURL;
-    export let userImgSrc;
+	export let compositeURL;
 
     let brightness = 50;
     let contrast = 100;
@@ -23,8 +22,7 @@
 </script>
 
 <div class="images-wrapper" id="double-exposure">
-    <img src={userImgSrc} alt="User" width="500" class="user-image" id="user-image" /> 
-    <img src={earthURL} class="earth-image" width="500" id="earth-image" alt="Earth" />
+	<img src={compositeURL} class="cmoposite-image" width="500" id="composite" alt="Composite" />
 </div>
 
 
