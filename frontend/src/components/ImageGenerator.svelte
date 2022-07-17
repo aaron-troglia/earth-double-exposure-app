@@ -8,15 +8,15 @@
 	let compositeURL = '';
 
 	const uploadImage = (img) => {
-		try {
-			axios.post(`http://localhost:8080/image/${img}`);
-		} catch (error) {
-			console.error(error);
-		}
+		console.log(img);
+		axios.post(
+			'http://localhost:8080/upload',
+			img
+		);
 	}
 	
 	const submitForm = async (e) => {
-		const formData = new FormData(e.target);
+		let formData = new FormData(e.target);
 		const data:any = {};
 
 		for (let field of formData) {
@@ -24,7 +24,7 @@
 			data[key] = value;
 		}
 
-		uploadImage(data['userImage']);
+		uploadImage(data);
 
 		if (data.userDate) {
 			try {

@@ -2,9 +2,14 @@ const express = require('express');
 const fs = require('fs');
 const axios = require('axios');
 const path = require('path');
+const multer = require('multer');
+const upload = multer({
+    dest: 'images/user/'
+});
 const app = express();
 const PORT = 8080;
 const BASE_URL = 'https://epic.gsfc.nasa.gov/api/natural/date';
+
 
 app.use(express.json());
 app.use('/images', express.static('images'));
@@ -34,13 +39,17 @@ app.get('/earth/:date', async (req, res) => {
     }
 });
 
-app.post('/image/:img', async (req, res) => {
-    const {img} = req.params;
-    console.log(img);
-
-    res.status(200).send({
-        url: img
-    });
+app.post('/upload', upload.single('upload'), (req, res) => {
+    console.log(req.file);
+    
+    res.send();
+    // if(req.file) {
+    //     res.json(req.file);
+    // } else {
+    //     throw new Error('Something went wrong');
+    // }
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message});
 })
 
 const downloadImage = async (url, dir, res) => {
