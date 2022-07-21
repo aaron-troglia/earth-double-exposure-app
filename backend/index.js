@@ -43,10 +43,12 @@ app.post('/upload', upload.single('userImage'), async (req, res) => {
     const date = req.body.userDate;   
     console.log('Getting image by date...'); 
     const earthImage = await getImageByDate(date, res);
+    generateDoubleExposure(earthImage, userImage, () => {
+        res.status(200).send({
+            url: 'http://localhost:8080/images/composites/test.png'
+        });
+    });
     
-    generateDoubleExposure(earthImage, userImage);
-    
-    res.send();
 }, (error, req, res, next) => {
     res.status(400).send({error: error.message});
 })
@@ -100,7 +102,7 @@ const downloadImage = async (url, dir) => {
 }
 
 /* generateDoubleExposure(earthURL, userImgSrc); */
-const generateDoubleExposure = (img1, img2) => {
+const generateDoubleExposure = (img1, img2, cb) => {
     console.log('Preparing images for double exposure...');
     const images = [img1, img2];
 
@@ -128,8 +130,9 @@ const generateDoubleExposure = (img1, img2) => {
         data[1].mask(data[0]);
         data[0].blit(data[1], 0, 0);
 
-        compositeURL = data[0].write('composites/test.png', () => {
+        compositeURL = data[0].write('images/composites/test.png', () => {
             console.log("Image ready!");
+            cb();
         });
     });
 }

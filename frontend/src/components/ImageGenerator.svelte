@@ -12,37 +12,21 @@
 		axios.post(
 			'http://localhost:8080/upload',
 			form
-		);
+		).then((response) => {
+			compositeURL = response.data.url;
+		});
 	}
 	
 	const submitForm = async (e) => {
 		const image = document.getElementById("userImage");
 		const date = document.getElementById("userDate");
+		compositeURL = '';
 		
 		let formData = new FormData(e.target);
 		formData.append("date", date.value);
 		formData.append("image", image.value);
-		
-		// const data:any = {};
-
-		// for (let field of formData) {
-		// 	const [key, value] = field;
-		// 	data[key] = value;
-		// }
 
 		sendForm(formData);
-
-		// if (data.userDate) {
-		// 	try {
-		// 		const response = await axios.get(`http://localhost:8080/earth/${data.userDate}`);
-		// 		const image = response.data.url;
-
-		// 		earthURL = 'http://localhost:8080/' + image;
-
-		// 	} catch (error) {
-		// 		console.error(error);
-		// 	} 
-		// }
 	}
 </script>
 

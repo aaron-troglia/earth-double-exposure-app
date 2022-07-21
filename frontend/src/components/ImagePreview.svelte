@@ -22,7 +22,7 @@
 </script>
 
 <div class="images-wrapper" id="double-exposure">
-	<img src={compositeURL} class="cmoposite-image" width="500" id="composite" alt="Composite" />
+	<img src={compositeURL} class="composite-image" width="500" id="composite" alt="Composite" />
 </div>
 
 
