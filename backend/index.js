@@ -38,14 +38,15 @@ app.listen(
 );
 
 app.post('/upload', upload.single('userImage'), async (req, res) => {
-    const userImage = req.file.path;
+    const userImagePath = req.file.path;
+    const userImageFileName = req.filename;
 
     const date = req.body.userDate;   
     console.log('Getting image by date...'); 
     const earthImage = await getImageByDate(date, res);
-    generateDoubleExposure(earthImage, userImage, () => {
+    generateDoubleExposure(earthImage, userImagePath, (imgId) => {
         res.status(200).send({
-            url: 'http://localhost:8080/images/composites/test.png'
+            url: `http://localhost:8080/images/composites/${imgId}.png`
         });
     });
     
@@ -130,9 +131,11 @@ const generateDoubleExposure = (img1, img2, cb) => {
         data[1].mask(data[0]);
         data[0].blit(data[1], 0, 0);
 
-        compositeURL = data[0].write('images/composites/test.png', () => {
+        const imgId = uniqid();
+
+        compositeURL = data[0].write(`images/composites/${imgId}.png`, () => {
             console.log("Image ready!");
-            cb();
+            cb(imgId);
         });
     });
 }
