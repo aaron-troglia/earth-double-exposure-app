@@ -5,7 +5,7 @@
 <form on:submit|preventDefault={submitForm} id="userForm" method="POST" enctype="multipart/form-data">
 	<div>
 		<label>
-			What date has meaning to you?<br />
+			Enter a date<br />
 			<input type="date" id="userDate" name="userDate" />
 		</label>
 	</div>
