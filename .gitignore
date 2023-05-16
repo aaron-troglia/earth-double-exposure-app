@@ -22,3 +22,5 @@ pnpm-debug.log*
 # uploaded images
 backend/composites/
 backend/images/
+
+.vscode
