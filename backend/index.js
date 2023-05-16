@@ -8,7 +8,7 @@ const multer = require('multer');
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, `${__dirname}/images/user`);
+            cb(null, `${__dirname}/images`);
         },
         filename: function (req, file, cb) {
             cb(null, uniqid() + path.extname(file.originalname));
@@ -38,21 +38,22 @@ app.listen(
 );
 
 app.post('/upload', upload.single('userImage'), async (req, res) => {
-    const userImagePath = req.file.path;
-    const userImageFileName = req.filename;
+    try {
+        const userImagePath = req.file.path;
+        const userImageFileName = req.file.filename;
 
-    const date = req.body.userDate;   
-    console.log('Getting image by date...'); 
-    const earthImage = await getImageByDate(date, res);
-    generateDoubleExposure(earthImage, userImagePath, (imgId) => {
-        res.status(200).send({
-            url: `http://localhost:8080/images/composites/${imgId}.png`
+        const date = req.body.userDate;
+        console.log('Getting image by date...');
+        const earthImage = await getImageByDate(date, res);
+        await generateDoubleExposure(earthImage, userImagePath, (imgId) => {
+            res.status(200).send({
+                url: `http://localhost:8080/images/composites/${imgId}.png`
+            });
         });
-    });
-    
-}, (error, req, res, next) => {
-    res.status(400).send({error: error.message});
-})
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
 
 const getImageByDate = async (date, res) => {
     const newDate = new Date(date);
@@ -102,7 +103,6 @@ const downloadImage = async (url, dir) => {
     });
 }
 
-/* generateDoubleExposure(earthURL, userImgSrc); */
 const generateDoubleExposure = (img1, img2, cb) => {
     console.log('Preparing images for double exposure...');
     const images = [img1, img2];

@@ -8,7 +8,6 @@
 	let compositeURL = '';
 
 	const sendForm = (form) => {
-		console.log(form);
 		axios.post(
 			'http://localhost:8080/upload',
 			form
