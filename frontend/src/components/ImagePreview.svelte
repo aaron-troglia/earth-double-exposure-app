@@ -21,9 +21,11 @@
     }
 </script>
 
-<div class="images-wrapper" id="double-exposure">
-	<img src={compositeURL} class="composite-image" width="500" id="composite" alt="Composite" />
-</div>
+{#if compositeURL}
+	<div class="images-wrapper mx-auto my-8 shadow-2xl" id="double-exposure">
+		<img src={compositeURL} class="composite-image text-center" width="500" height="500" id="composite" alt="Double Exposure" />
+	</div>
+{/if}
 
 
 <style>

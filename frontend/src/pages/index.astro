@@ -3,69 +3,12 @@ import Layout from "../layouts/Layout.astro";
 import ImageGenerator from "../components/ImageGenerator.svelte";
 ---
 
-<Layout title="Our Earth">
-	<main>
-		<h1>Earth Double Exposure App</h1>
-		<p class="instructions">Choose a data and upload a photo. An image of the Earth will be combined with your image to create a double exposure.</p>
+<Layout title="Earph">
+	<main class="py-8">
+		<h1 class="uppercase tracking-wider text-gray-700 text-2xl md:text-4xl font-bold text-center mb-4">Earph</h1>
+		<p class="text-center mb-4 max-w-xl mx-auto">EPIC API Rendering Photos</p>
+		<p class="text-center mb-4 max-w-xl mx-auto">Choose a date and upload a photo. An image of the Earth will be combined with your image to create a double exposure.</p>
 
 		<ImageGenerator client:load />
 	</main>
 </Layout>
-
-<style>
-	:root {
-		--astro-gradient: linear-gradient(0deg, #2d97bc, #e795b6);
-	}
-
-	h1 {
-		margin: 2rem 0;
-		letter-spacing: 5px;
-		text-transform: uppercase;
-		font-weight: bold;
-		font-size: 3rem;
-	}
-
-	main {
-		margin: auto;
-		padding: 1em;
-		max-width: 1366px;
-	}
-
-	.text-gradient {
-		font-weight: 900;
-		background-image: var(--astro-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 100% 200%;
-		background-position-y: 100%;
-		border-radius: 0.4rem;
-		animation: pulse 4s ease-in-out infinite;
-	}
-
-	@keyframes pulse {
-		0%,
-		100% {
-			background-position-y: 0%;
-		}
-		50% {
-			background-position-y: 80%;
-		}
-	}
-
-	.instructions {
-		margin-bottom: 2rem;
-	}
-
-	.instructions code {
-		font-size: 0.875em;
-		border: 0.1em solid var(--color-border);
-		border-radius: 4px;
-		padding: 0.15em 0.25em;
-	}
-	.link-card-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-		gap: 1rem;
-		padding: 0;
-	}
-</style>

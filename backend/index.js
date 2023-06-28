@@ -122,8 +122,8 @@ const generateDoubleExposure = (img1, img2, cb) => {
         data[0].contain(500, 500);
         data[1].cover(500, 500);
 
-        data[1].brightness(0.3);
-        data[1].contrast(0.6);
+        data[1].brightness(0.1);
+        data[1].contrast(0);
         data[1].color([
             {apply: 'greyscale', params: [50]}
         ]);
