@@ -13,6 +13,7 @@
 			form
 		).then((response) => {
 			compositeURL = response.data.url;
+			console.log(compositeURL)
 		});
 	}
 	

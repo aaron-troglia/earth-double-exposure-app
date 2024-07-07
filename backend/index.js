@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const jimp = require('jimp');
 const fs = require('fs');
 const axios = require('axios');
@@ -29,6 +30,9 @@ const app = express();
 const PORT = 8080;
 const BASE_URL = 'https://epic.gsfc.nasa.gov/api/natural/date';
 
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:8080']
+}));
 app.use(express.json());
 app.use('/images', express.static('images'));
 
@@ -43,9 +47,9 @@ app.post('/upload', upload.single('userImage'), async (req, res) => {
         const userImageFileName = req.file.filename;
 
         const date = req.body.userDate;
-        console.log('Getting image by date...');
         const earthImage = await getImageByDate(date, res);
-        await generateDoubleExposure(earthImage, userImagePath, (imgId) => {
+        
+        generateDoubleExposure(earthImage, userImagePath, (imgId) => {
             res.status(200).send({
                 url: `http://localhost:8080/images/composites/${imgId}.png`
             });
@@ -67,10 +71,10 @@ const getImageByDate = async (date, res) => {
         const imageName = arr[0].image + '.png';
         const archive = `https://epic.gsfc.nasa.gov/archive/natural/${year}/${month}/${day}/png/`;
         const source = archive + imageName;
-        console.log('image found!');
-        const earthImage = await downloadImage(source, 'images/earth'); 
-        console.log('image downloaded!');
-        return earthImage;
+
+        const downloadedImage = await downloadImage(source, 'images/earth'); 
+
+        return downloadedImage;
     } catch (error) {
         res.status(500).send(error);
     }
@@ -79,7 +83,6 @@ const getImageByDate = async (date, res) => {
 const downloadImage = async (url, dir) => {
     const file = path.basename(url);
     const localPath = path.resolve(__dirname, dir, file);
-    console.log('getting image...');
 
     let response;
     
@@ -89,35 +92,32 @@ const downloadImage = async (url, dir) => {
             method: 'GET',
             responseType: 'stream'
         });
+
+        return new Promise((resolve, reject) => {            
+            const stream = response.data.pipe(fs.createWriteStream(localPath));
+            console.log('downloading...');
+            stream.on('finish', () => {
+                resolve(localPath);
+            })
+        }).then(path => {
+            return path
+        })
     } catch (error) {
         throw new Error(error);
     }
-
-    return new Promise((resolve, reject) => {            
-        console.log('downloading...');
-
-        const stream = response.data.pipe(fs.createWriteStream(localPath));
-        stream.on('finish', () => {
-            resolve(localPath);
-        })
-    });
 }
 
 const generateDoubleExposure = (img1, img2, cb) => {
-    console.log('Preparing images for double exposure...');
     const images = [img1, img2];
 
     let jimps = [];
 
-    console.log('Setting promises');
-    for (var i = 0; i < images.length; i++) {
-        jimps.push(jimp.read(images[i]));
-    }
+    jimps.push(jimp.read(images[0]));
+    jimps.push(jimp.read(images[1]));
 
     Promise.all(jimps).then(data => {
         return Promise.all(jimps);
     }).then(data => {
-        console.log('Processing images');
 
         data[0].contain(500, 500);
         data[1].cover(500, 500);
@@ -134,7 +134,6 @@ const generateDoubleExposure = (img1, img2, cb) => {
         const imgId = uniqid();
 
         compositeURL = data[0].write(`images/composites/${imgId}.png`, () => {
-            console.log("Image ready!");
             cb(imgId);
         });
     });
