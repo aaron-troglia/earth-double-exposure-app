@@ -3,24 +3,27 @@
     import UserImageForm from './UserImageForm.svelte';
 	import axios from 'axios';
 
-	let earthURL = '';
-	let userImgSrc = '';
 	let compositeURL = '';
+	let loading = false;
 
 	const sendForm = (form) => {
+		loading = true;
+		
 		axios.post(
 			'http://localhost:8080/upload',
 			form
 		).then((response) => {
 			compositeURL = response.data.url;
-			console.log(compositeURL)
+			loading = false;
 		});
 	}
 	
 	const submitForm = async (e) => {
-		const image = document.getElementById("userImage");
-		const date = document.getElementById("userDate");
+		const image = e.currentTarget.userImage;
+		const date = e.currentTarget.userDate;
 		compositeURL = '';
+
+		console.log(image, date)
 		
 		let formData = new FormData(e.target);
 		formData.append("date", date.value);
@@ -30,24 +33,5 @@
 	}
 </script>
 
-<UserImageForm {submitForm} />
+<UserImageForm {submitForm} loading={loading} />
 <ImagePreview {compositeURL} />
-
-
-<style>
-	#earthImage {
-		width: 500px;
-		height: 500px;
-	}
-
-	#userImage {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 500px;
-		height: 500px;
-		mix-blend-mode: overlay;
-		object-fit: cover;
-		opacity: 1;
-	}
-</style>

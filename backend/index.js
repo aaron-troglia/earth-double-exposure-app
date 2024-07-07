@@ -44,8 +44,6 @@ app.listen(
 app.post('/upload', upload.single('userImage'), async (req, res) => {
     try {
         const userImagePath = req.file.path;
-        const userImageFileName = req.file.filename;
-
         const date = req.body.userDate;
         const earthImage = await getImageByDate(date, res);
         
@@ -95,7 +93,6 @@ const downloadImage = async (url, dir) => {
 
         return new Promise((resolve, reject) => {            
             const stream = response.data.pipe(fs.createWriteStream(localPath));
-            console.log('downloading...');
             stream.on('finish', () => {
                 resolve(localPath);
             })
