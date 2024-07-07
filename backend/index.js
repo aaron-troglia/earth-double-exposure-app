@@ -115,22 +115,25 @@ const generateDoubleExposure = (img1, img2, cb) => {
     Promise.all(jimps).then(data => {
         return Promise.all(jimps);
     }).then(data => {
+        const earthImage = data[0];
+        const userImage = data[1];
 
-        data[0].contain(500, 500);
-        data[1].cover(500, 500);
+        earthImage.resize(1000, 1000);
+        earthImage.crop(250, 250, 500, 500);
+        userImage.cover(500, 500);
 
-        data[1].brightness(0.1);
-        data[1].contrast(0);
-        data[1].color([
-            {apply: 'greyscale', params: [50]}
-        ]);
+        userImage.brightness(0.1);
+        // userImage.contrast(0);
+        // userImage.color([
+        //     {apply: 'greyscale', params: [100]}
+        // ]);
 
-        data[1].mask(data[0]);
-        data[0].blit(data[1], 0, 0);
+        userImage.mask(earthImage);
+        earthImage.blit(userImage, 0, 0);
 
         const imgId = uniqid();
 
-        compositeURL = data[0].write(`images/composites/${imgId}.png`, () => {
+        compositeURL = earthImage.write(`images/composites/${imgId}.png`, () => {
             cb(imgId);
         });
     });

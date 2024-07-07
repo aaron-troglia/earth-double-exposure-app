@@ -5,33 +5,30 @@
 
 	let compositeURL = '';
 	let loading = false;
-
-	const sendForm = (form) => {
-		loading = true;
-		
-		axios.post(
-			'http://localhost:8080/upload',
-			form
-		).then((response) => {
-			compositeURL = response.data.url;
-			loading = false;
-		});
-	}
+	let errorMessage = '';
 	
-	const submitForm = async (e) => {
+	const submitForm = (e) => {
+		loading = true;
 		const image = e.currentTarget.userImage;
 		const date = e.currentTarget.userDate;
 		compositeURL = '';
-
-		console.log(image, date)
 		
 		let formData = new FormData(e.target);
 		formData.append("date", date.value);
 		formData.append("image", image.value);
 
-		sendForm(formData);
+		axios.post(
+			'http://localhost:8080/upload',
+			formData
+		).then((response) => {
+			compositeURL = response.data.url;
+		}).catch((reason) => {
+			errorMessage = 'There has been an error: ' + reason.message;
+		}).finally(() => {
+			loading = false;
+		});
 	}
 </script>
 
-<UserImageForm {submitForm} loading={loading} />
+<UserImageForm {submitForm} {loading} {errorMessage} />
 <ImagePreview {compositeURL} />
