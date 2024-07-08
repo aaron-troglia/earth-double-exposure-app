@@ -9,13 +9,13 @@
 	<div>
 		<label class="mb-4 block">
 			Enter a date<br />
-			<input class="shadow rounded p-2 w-full" max={maxDate} type="date" id="userDate" name="userDate" />
+			<input required class="shadow rounded p-2 w-full" max={maxDate} type="date" id="userDate" name="userDate" />
 		</label>
 	</div>
 	<div>
 		<label class="mb-4 block">
 			Upload your image<br />
-			<input class="shadow rounded p-2 w-full bg-white" type="file" id="userImage" name="userImage" />
+			<input required class="shadow rounded p-2 w-full bg-white" type="file" id="userImage" name="userImage" />
 		</label>
 	</div>
 	<input 
