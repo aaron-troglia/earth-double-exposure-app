@@ -12,6 +12,7 @@
 		const image = e.currentTarget.userImage;
 		const date = e.currentTarget.userDate;
 		compositeURL = '';
+		errorMessage = '';
 		
 		let formData = new FormData(e.target);
 		formData.append("date", date.value);
